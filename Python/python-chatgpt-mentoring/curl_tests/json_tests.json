@@ -1,0 +1,44 @@
+[
+    {
+        "type": " ",
+        "amount": 25,
+        "currency": "EUR",
+        "paymentMethod": " credit card ",
+        "status": "Pending"
+    },
+    {
+        "type": "Energy",
+        "amount": 25,
+        "currency": "BRL",
+        "paymentMethod": " debit card ",
+        "status": "Pending"
+    },
+    {
+        "type": "Energy",
+        "amount": 25,
+        "currency": "zzz",
+        "paymentMethod": " credit card ",
+        "status": "Pending"
+    },
+    {
+        "type": "Energy",
+        "amount": 25,
+        "currency": "EUR",
+        "paymentMethod": " bitcoin ",
+        "status": "Pending"
+    },
+    {
+        "type": "Energy",
+        "amount": 25,
+        "currency": "EUR",
+        "paymentMethod": "  ",
+        "status": " pending "
+    },
+    {
+        "type": "Energy",
+        "amount": 25,
+        "currency": "EUR",
+        "paymentMethod": " credit card ",
+        "status": "Unknown"
+    }
+]

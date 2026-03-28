@@ -1,0 +1,9 @@
+{
+    "python.analysis.extraPaths": [
+        "./class_01/data",
+        "./class_01/utils"
+    ],
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportReturnType": "none"
+    }
+}

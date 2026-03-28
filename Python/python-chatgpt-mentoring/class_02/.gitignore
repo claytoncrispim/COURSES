@@ -1,0 +1,23 @@
+#pycache folders
+__pycache__/
+#venv folders
+venv/
+#env folders and .env files
+env/
+.env
+#IDE folders
+.idea/
+.vscode/
+#macOS files
+.DS_Store
+#log files
+*.log
+#database files
+*.db
+#compiled files
+*.pyc
+#test files
+tests/
+#practical examples
+examples/
+practical_examples/

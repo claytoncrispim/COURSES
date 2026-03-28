@@ -1,0 +1,12 @@
+
+curl -X POST "http://127.0.0.1:8000/validate" -H "Content-Type: application/json" -d '{"type": "Energy","amount": 150.75,"currency": "EUR","paymentMethod": " credit card ","status": "Pending","extraField": "This should be ignored by the validator"}'
+
+
+curl -X POST "http://127.0.0.1:8000/validate" -H "Content-Type: application/json" -d '{"type": "Energy","amount": 25,"currency": "zzz","paymentMethod": "Credit Card","status": "Pending"}'
+
+curl -X POST "http://127.0.0.1:8000/validate" -H "Content-Type: application/json" -d '{"type": " ","amount": 25,"currency": "BRL","paymentMethod": "Credit Card","status": "Pending"}'
+
+curl -X POST "http://127.0.0.1:8000/validate" -H "Content-Type: application/json" -d '{"type": "Energy","amount": 25,"currency": "EUR","paymentMethod": " ","status": "Pending"}'
+
+curl -i "http://127.0.0.1:8000/health"
+

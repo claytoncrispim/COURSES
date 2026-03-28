@@ -16,8 +16,6 @@ env/
 *.db
 #compiled files
 *.pyc
-#test files
-tests/
 #practical examples
 examples/
 practical_examples/

@@ -4,11 +4,11 @@ on:
     push:
         paths:
             - 'Python/python-chatgpt-mentoring/class_07/**'
-            - 'github/workflows/class_07_tests.yml'
+            - '.github/workflows/class_07_tests.yml'
     pull_request:
         paths:
             - 'Python/python-chatgpt-mentoring/class_07/**'
-            - 'github/workflows/class_07_tests.yml'
+            - '.github/workflows/class_07_tests.yml'
 
 jobs:
     test:

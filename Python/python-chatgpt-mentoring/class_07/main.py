@@ -15,4 +15,4 @@ if __name__ == "__main__":
 
     
 
-print(validate_bill_payload(payload))
+# print(validate_bill_payload(payload))

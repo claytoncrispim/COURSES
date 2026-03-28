@@ -15,7 +15,6 @@ from class_07.types import ValidationError
 # * normalize_payment_method() uses normalize_required_str() to validate the presence of a payment method string, then 
 #   checks if it's in the allowed set, returning either the normalized payment method or an error
 # * normalize_bill_type() uses normalize_required_str() to validate the presence of a bill type string, then checks if it's in the allowed set, returning either the normalized bill type or an error
-# * is_missing_or_empty() is a utility function to check if a value is either None or an empty/whitespace string, which can be used for quick validation checks in the route handlers
 
 Kind = Literal["missing", "empty", "invalid"]
 
@@ -95,10 +94,6 @@ def normalize_payment_method(raw: Any, field: str, allowed: set[str]) -> tuple[b
     return True, method
 
 
-
-# Deprecated utility - we can use normalize_required_str() directly in the route handlers instead, which gives us more control over the error details (e.g. field name, reason, kind)
-# def is_missing_or_empty(raw: Any) -> bool:
-#     return raw is None or (isinstance(raw, str) and not raw.strip())
 
 # Export as package-level utils
 __all__: list[str] = ["normalize_required_str", "normalize_amount", "normalize_currency", "normalize_status", "normalize_payment_method", "normalize_bill_type"]

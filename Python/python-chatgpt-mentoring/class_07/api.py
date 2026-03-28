@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 
 from class_07.validator import validate_bill_payload
 
-app = FastAPI(title="Bill Payload Validator", version="1.0.0")
+app = FastAPI(title="Bill Payload Validator - Class 07", version="1.0.0")
 
 @app.get("/health")
 def health() -> dict[str, str]:

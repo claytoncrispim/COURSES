@@ -252,7 +252,7 @@ print(factorial(0))
 # Recursion Solution
 # Explanation: A function that calls itself is called a recursive function. In this case, the factorial function calls itself with a smaller value of num until it reaches the base case (when num is 0). The base case returns 1, and the recursive calls build up the factorial value as they return back up the call stack.
 # Example: factorial(5) => 5 * factorial(4) => 5 * (4 * factorial(3)) => 5 * (4 * (3 * factorial(2))) => 5 * (4 * (3 * (2 * factorial(1)))) => 5 * (4 * (3 * (2 * (1 * factorial(0))))) => 5 * (4 * (3 * (2 * (1 * 1)))) => 120
-def factorial(num):
+def recFactorial(num):
     if type(num) != int:
         return None
     if num < 0:
@@ -261,7 +261,7 @@ def factorial(num):
     if num == 0:
         return 1
     else:
-        return num * factorial(num - 1)
+        return num * recFactorial(num - 1)
     
 
-print(factorial(6))
+print(recFactorial(6))

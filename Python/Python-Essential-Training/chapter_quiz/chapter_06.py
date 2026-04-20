@@ -2,10 +2,10 @@
 # What will be printed when this code is run?
 var1 = 1
 var2 = 2
-def someFunc(var1):
+def someFuncA(var1):
     print(f'{var1}, {var2}')
 
-someFunc(3)
+someFuncA(3)
 # 1st option: 2, 1
 # 2nd option: 2, 3
 # 3rd option: 1, 2
@@ -25,10 +25,10 @@ someFunc(3)
 
 # Question 3 of 3:
 # What will be printed when this code is run?
-def someFunc(func):
+def someFuncB(func):
     print(func(5) + 2)
 
-someFunc(lambda x: x * 3)
+someFuncB(lambda x: x * 3)
 
 # 1st option: 17 (correct answer)
 # 2nd option: 21

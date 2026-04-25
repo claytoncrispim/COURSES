@@ -12,6 +12,7 @@
 4. [05_04 – Faster Prime Finding](#0504--faster-prime-finding)
 5. [06_04 – Sum of Triangles](#0604--sum-of-triangles)
 6. [07_04 – Drawing Shapes with Classes](#0704--drawing-shapes-with-classes)
+7. [08_07 – Bad Arguments (Exceptions & Decorators)](#0807--bad-arguments-exceptions--decorators)
 
 ---
 
@@ -273,6 +274,87 @@ Each row grows by 2 characters (`i * 2 + 1` gives 1, 3, 5, 7, 9...) and is padde
 
 ---
 
+## 08_07 – Bad Arguments (Exceptions & Decorators)
+
+**Files:**
+- `08_07_bad_arguments.py` ← student's solution
+- `08_07_solution_bad_arguments.py` ← 📌 instructor's solution
+
+### What is the challenge?
+
+The starting code given was an empty `NonIntArgumentException` class and a bare `handleNonIntArguments` decorator skeleton. The challenge was to fill them in so that any function decorated with `@handleNonIntArguments` raises a custom exception when called with non-integer arguments.
+
+### Key concepts
+
+**Custom Exception** — a class that extends Python's built-in `Exception`. Raising it works exactly like any other exception, but the name and message are yours to define.
+
+**Decorator** — a function that wraps another function to add behaviour before or after it runs. The pattern always looks like:
+```python
+def myDecorator(func):
+    def wrapper(*args):
+        # extra logic here
+        return func(*args)  # then call the original function
+    return wrapper
+
+@myDecorator
+def myFunction():
+    ...
+```
+`*args` means the wrapper accepts any number of arguments and passes them straight through to the original function.
+
+### Student's approach
+
+The student extended the custom exception with extra properties (`errorType`, `message`) and a custom `__init__` to format the error output:
+
+```python
+class NonIntArgumentException(Exception):
+    errorType = TypeError
+    message = "Not an integer!"
+    def __init__(self):
+        super().__init__(f'\n Error: {self.errorType} \n Message: {self.message}')
+```
+
+The decorator loops through every argument and raises the exception if any is not an integer, before calling the original function:
+
+```python
+def handleNonIntArguments(func):
+    def wrapper(*args):
+        for arg in args:
+            if type(arg) is not int:
+                raise NonIntArgumentException()
+        return func(*args)
+    return wrapper
+```
+
+The student also extracted the raise into its own helper function `raiseIntError()` — a clean way to avoid repeating the raise statement if the check was needed in multiple places.
+
+### Instructor's approach (solution)
+
+The instructor kept things minimal. The exception class is left completely bare:
+
+```python
+class NonIntArgumentException(Exception):
+    pass
+```
+
+And the decorator is the same core logic, but without the helper function:
+
+```python
+def handleNonIntArguments(func):
+    def wrapper(*args):
+        for item in args:
+            if type(item) is not int:
+                raise NonIntArgumentException()
+        return func(*args)
+    return wrapper
+```
+
+> The instructor's solution raises `NonIntArgumentException()` with no message. The student's version adds a formatted error message — both are valid; the student's is just more informative when the exception is printed.
+
+> The solution file also notes a Copilot-suggested variant that includes the offending argument in the message: `raise NonIntArgumentException(f"Argument '{item}' is not an integer!")` — even more useful for debugging.
+
+---
+
 ## Quick Reference
 
 | File | Type | Topic |
@@ -287,3 +369,5 @@ Each row grows by 2 characters (`i * 2 + 1` gives 1, 3, 5, 7, 9...) and is padde
 | `06_04_sum_of_triangles.py` | Student (matches Instructor) | Recursion |
 | `07_04_drawing_shapes.py` | Student (Shape & Square given by 📌 Instructor) | Classes & OOP |
 | `07_04_solution_drawing_shapes.py` | 📌 Instructor | Classes & OOP |
+| `08_07_bad_arguments.py` | Student | Exceptions & Decorators |
+| `08_07_solution_bad_arguments.py` | 📌 Instructor | Exceptions & Decorators |

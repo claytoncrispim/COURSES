@@ -1,3 +1,4 @@
 jupyterlab
 notebook
 ipykernel
+multiprocess==0.70.19

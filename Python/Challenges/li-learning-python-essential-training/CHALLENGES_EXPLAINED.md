@@ -13,6 +13,7 @@
 5. [06_04 – Sum of Triangles](#0604--sum-of-triangles)
 6. [07_04 – Drawing Shapes with Classes](#0704--drawing-shapes-with-classes)
 7. [08_07 – Bad Arguments (Exceptions & Decorators)](#0807--bad-arguments-exceptions--decorators)
+8. [10_04 – ASCII Art Compression (Files, JSON, and Bytes)](#1004--ascii-art-compression-files-json-and-bytes)
 
 ---
 
@@ -355,6 +356,83 @@ def handleNonIntArguments(func):
 
 ---
 
+## 10_04 – ASCII Art Compression (Files, JSON, and Bytes)
+
+**Files:**
+- `10_04_ascii_art_compression.py` ← student's attempt
+- `10_04_solution_01_ascii_art_compression.py` ← 📌 instructor's solution
+- `10_04_solution_02_ascii_art_compression.py` ← 📌 instructor's solution
+- `10_04_solution_03_ascii_art_compression.py` ← 📌 instructor's solution
+- `10_04_challenge_art.txt` ← challenge input file
+- `10_04_challenge_art_encoded.txt` ← encoded output file
+
+### What is the challenge?
+
+The task is to implement two file-based functions using run-length encoding from Chapter 4:
+
+- `encodeFile(filename, newFilename)` should read the original ASCII art, compress it, and write a smaller file.
+- `decodeFile(filename)` should reverse that process and return the original uncompressed text.
+
+### Core idea
+
+The compression strategy is still based on character runs:
+
+```text
+AAAAABBBBCCC -> [('A', 5), ('B', 4), ('C', 3)]
+```
+
+The difference in Chapter 10 is how this encoded data is written to disk and reconstructed.
+
+### Student's attempt
+
+The student correctly reused `encodeString` and `decodeString`, but in `encodeFile` and `decodeFile` the implementation passes a filename string directly into those functions and then tries to open the resulting Python list representation as if it were a real filename.
+
+That is why the attempt fails at runtime: the file read/write flow is not yet connected to the encoding/decoding flow.
+
+### Instructor's solution 1: JSON serialization
+
+The first solution serializes the encoded list of pairs with JSON:
+
+```python
+with open(filename, 'r') as f:
+    data = encodeString(f.read())
+
+with open(newFilename, 'w') as f:
+    json.dump(data, f)
+```
+
+Then `decodeFile` loads the JSON and calls `decodeString(data)`.
+
+Result noted in the file:
+- Original: `2749` bytes
+- Encoded: `2441` bytes
+
+### Instructor's solution 2: compact text format
+
+Instead of JSON punctuation overhead, each tuple is saved in a compact text format:
+
+```text
+A|5~B|4~C|3
+```
+
+This reduces size further.
+
+Result noted in the file:
+- Encoded: `1007` bytes
+
+### Instructor's solution 3: byte-level format
+
+The most compact variant writes raw bytes (`char byte + count byte`) via `bytearray`, then decodes by reading 2-byte chunks.
+
+Result noted in the file:
+- Encoded: `466` bytes
+
+### Key takeaway
+
+All three instructor solutions use the same run-length encoding concept, but each file format choice changes storage efficiency. JSON is easiest to read, custom delimiters are smaller, and a byte format is smallest.
+
+---
+
 ## Quick Reference
 
 | File | Type | Topic |
@@ -371,3 +449,7 @@ def handleNonIntArguments(func):
 | `07_04_solution_drawing_shapes.py` | 📌 Instructor | Classes & OOP |
 | `08_07_bad_arguments.py` | Student | Exceptions & Decorators |
 | `08_07_solution_bad_arguments.py` | 📌 Instructor | Exceptions & Decorators |
+| `10_04_ascii_art_compression.py` | Student attempt | Files, Encoding & Debugging |
+| `10_04_solution_01_ascii_art_compression.py` | 📌 Instructor | Files + JSON |
+| `10_04_solution_02_ascii_art_compression.py` | 📌 Instructor | Files + Compact Text Format |
+| `10_04_solution_03_ascii_art_compression.py` | 📌 Instructor | Files + Byte Encoding |

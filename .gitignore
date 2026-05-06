@@ -87,3 +87,6 @@ ENV/
 env/
 env.bak/
 venv.bak/
+
+# Course working transcripts
+Python/Django/transcript.txt

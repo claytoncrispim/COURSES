@@ -1,0 +1,10 @@
+<html>   
+    <h1>Popular Notes</h1>
+    {% for note in notes %}
+        <h3>{{note.title}} - # of Likes: {{note.likes}}</h3>
+        <!-- <p>{{notes.text}}</p>
+        <p># of Likes:</p>
+        <p>{{notes.likes}}</p> -->
+    {% endfor %}
+
+</html>

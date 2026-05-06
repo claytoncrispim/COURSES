@@ -24,4 +24,6 @@ urlpatterns = [
     # path('home/', views.home), # This is the old way of doing it. It is now handle by the home app's urls.py file.
 
     path('', include('home.urls')), # This is the new way of doing it. It tells Django to look for a urls.py file in the home app and use it to handle any URLs that start with '' (which is the root URL).
+
+    path('smart/', include('notes.urls')), # This tells Django to look for a urls.py file in the notes app and use it to handle any URLs that start with 'smart/'.
 ]

@@ -1,0 +1,14 @@
+<html>
+    <h1>These are the notes:</h1>
+
+    <ul>
+        {% for note in notes %}
+            <li>{{note.title}}</li>
+        {% endfor %}
+    </ul>
+</html>
+
+<!-- For Learning Notes:
+    DTL: Django Template Language. It is a simple language that allows you to write Python-like code in your HTML templates. It is used to display data from the database in the templates. It is also used to control the flow of the template, such as loops and conditionals. In this example, we are using a for loop to loop through the notes and display the title of each note in an unordered list. The 'notes' variable is passed to the template from the view, which retrieves all the notes from the database and sends them to the template for rendering.
+    Everything between the curly brackets is a Django template tag. It is used to loop through the notes and display the title of each note in an unordered list. The 'notes' variable is passed to the template from the view, which retrieves all the notes from the database and sends them to the template for rendering.
+-->

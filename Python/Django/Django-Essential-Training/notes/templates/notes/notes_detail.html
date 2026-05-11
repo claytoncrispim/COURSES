@@ -1,16 +1,10 @@
-<html>
-    <h1>{{note.title}}</h1>
+{% extends "base.html" %}
 
+{% block content %}
+<div class="border rounded p-3">
+    <h1 class="my-5">{{note.title}}</h1>        
     <p>{{note.text}}</p>
     <p># of Likes:</p>
     <p>{{note.likes}}</p>
-</html>
-
-<!-- For learning notes:
- 
-About the following snippet:
-    <p># of Likes:</p>
-    <p>{{note.likes}}</p>
-
-I've added on my own as a way to understand if I could and how to implement this dynamic process.
--->
+</div>            
+{% endblock %}

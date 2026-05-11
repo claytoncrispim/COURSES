@@ -1,10 +1,17 @@
-<html>   
-    <h1>Popular Notes</h1>
-    {% for note in notes %}
-        <h3>{{note.title}} - # of Likes: {{note.likes}}</h3>
-        <!-- <p>{{notes.text}}</p>
-        <p># of Likes:</p>
-        <p>{{notes.likes}}</p> -->
-    {% endfor %}
+{% extends "base.html" %}  
 
-</html>
+{% block content %}
+    <h1 class="my-5">Popular Notes</h1>
+    <div class="row row-cols-3 g-2">
+        {% for note in notes %}
+        <div class="col">
+            <div class="p-3 border rounded bg-primary text-white text-center h-100">                
+                <a href="{% url 'notes.detail' pk=note.id %}" class="text-white text-decoration-none">
+                    <h3>{{ note.title |truncatechars:10 }}</h3>
+                </a>
+                <p># of Likes: {{ note.likes }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}  

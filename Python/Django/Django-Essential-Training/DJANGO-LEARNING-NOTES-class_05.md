@@ -1,97 +1,138 @@
 # Django Learning Notes - class_05
-## Module 05 - In Progress
+## Module 05 - Building Robust Front-Ends in Django
 
 ---
 
-## Module 05 chapters covered
+## Module 05 chapters covered so far
 
-1. [To fill]
-2. [To fill]
-3. [To fill]
-4. [To fill]
-5. [To fill]
+1. Static files in Django
+2. An HTML skeleton: how to set up a base structure to every Django template
+3. It's time to add some style
 
 ---
 
-## 1. Chapter notes
+## 1. Static files in Django
 
 ### Main concept
 
-[Write the key idea from this chapter in 2-4 sentences]
+Static files are assets that are not generated dynamically by Python code, such as CSS files, JavaScript files, and images. Django needs to know where those files live so templates can load them correctly.
 
 ### What I changed in code
 
-- [File and change 1]
-- [File and change 2]
+- In `smartnotes/settings.py`, I configured `STATIC_URL = 'static/'`.
+- In `smartnotes/settings.py`, I added `STATICFILES_DIRS = [BASE_DIR / 'static/']` so Django can look inside the project's shared `static/` folder.
+- I created the folder structure `static/css/` and added `static/css/style.css`.
 
 ### Why this matters
 
-[Explain what this change enables in the app]
+Without static file configuration, Django templates would not be able to load shared CSS, JavaScript, or images. This is the foundation for styling the project consistently across pages.
 
-### Quick test I ran
+### Beginner note
 
-- [URL or command]
-- [Expected behavior]
-- [Actual behavior]
+- `STATIC_URL` is the URL prefix used in templates.
+- `STATICFILES_DIRS` tells Django where to find your local static assets during development.
+- The actual file path can be different from the URL path.
+
+Example:
+
+- File on disk: `static/css/style.css`
+- Template reference: `{% static 'css/style.css' %}`
 
 ---
 
-## 2. Chapter notes
+## 2. Base template for shared page structure
 
 ### Main concept
 
-[Write the key idea]
+Instead of repeating the same HTML skeleton in every page, Django lets you create one base template and have other templates extend it. This keeps layout code in one place and makes updates much easier.
 
 ### What I changed in code
 
-- [File and change]
+- I created `static/templates/base.html` as the shared layout template.
+- In `smartnotes/settings.py`, I added `BASE_DIR / 'static/templates'` to `TEMPLATES['DIRS']` so Django can find `base.html`.
+- The base template includes:
+	- `{% load static %}`
+	- the shared `<html>`, `<head>`, and `<body>` structure
+	- a Bootstrap CDN link
+	- a `{% block content %}` section for child templates
 
 ### Why this matters
 
-[Impact on project]
+This gives every page a consistent structure and avoids duplicating boilerplate HTML. When you want to change the layout later, you only need to update one file.
 
-### Quick test I ran
+### Beginner note
 
-- [Test]
+The child template uses:
+
+```html
+{% extends "base.html" %}
+```
+
+That means: "Use the HTML structure from `base.html`, and only replace the named block sections I define here."
 
 ---
 
-## 3. Chapter notes
+## 3. Styling templates
 
 ### Main concept
 
-[Write the key idea]
+Once the static and template structure is ready, styling becomes much easier. In this stage, the project uses two styling approaches:
+
+- Bootstrap utility classes from a CDN
+- Your own CSS rules in `static/css/style.css`
 
 ### What I changed in code
 
-- [File and change]
+- In `static/templates/base.html`, I linked Bootstrap from a CDN.
+- In `static/css/style.css`, I added custom classes such as:
+	- `.note-li`
+	- `.note-detail`
+	- `.note-popular`
+- In templates like `notes/templates/notes/notes_list.html`, `notes_detail.html`, and `notes_popular.html`, I used Bootstrap classes such as:
+	- `container`
+	- `row`
+	- `col`
+	- `border`
+	- `rounded`
+	- `bg-primary`
+	- `text-white`
+	- `my-5`
 
 ### Why this matters
 
-[Impact on project]
+Bootstrap gives fast, ready-made styling patterns, while custom CSS lets you fine-tune the app with your own visual choices. Together, they give you speed plus flexibility.
 
-### Quick test I ran
+### What I can already see in the project
 
-- [Test]
+- `notes_list.html` now displays notes in a grid layout instead of a plain list.
+- `notes_detail.html` shows the note content inside a bordered area.
+- `notes_popular.html` uses stronger visual emphasis with a colored card-like block and likes count.
 
 ---
 
 ## Code changes log (branch 05)
 
-Use this section as a chronological worklog while coding.
-
 | Step | File | Change summary | Reason |
 |---|---|---|---|
-| 1 | [path] | [what changed] | [why] |
-| 2 | [path] | [what changed] | [why] |
+| 1 | `smartnotes/settings.py` | Added `STATICFILES_DIRS` and template directory entry | So Django can find shared static assets and `base.html` |
+| 2 | `static/templates/base.html` | Created a reusable base template with Bootstrap | So all pages can share one layout |
+| 3 | `static/css/style.css` | Added custom CSS classes | So the project can have custom styling beyond Bootstrap |
+| 4 | `notes/templates/notes/notes_list.html` | Extended `base.html` and used Bootstrap grid classes | So notes render in a cleaner responsive layout |
+| 5 | `notes/templates/notes/notes_detail.html` | Extended `base.html` and styled note detail content | So a single note page has structure and spacing |
+| 6 | `notes/templates/notes/notes_popular.html` | Extended `base.html` and added visual emphasis | So popular notes stand out more clearly |
 
 ---
 
-## Errors, debugging, and fixes
+## Quick checks I can run mentally or in the browser
 
-| Problem | Root cause | Fix | How I verified |
-|---|---|---|---|
-| [error message] | [cause] | [solution] | [proof] |
+1. Visit the notes pages in the browser.
+Expected result: they should share the same base structure and spacing.
+
+2. Confirm templates extend the base template.
+Expected result: `notes_list.html`, `notes_detail.html`, and `notes_popular.html` should all use `{% extends "base.html" %}`.
+
+3. Confirm Bootstrap classes affect layout.
+Expected result: notes should appear with spacing, borders, and grid alignment instead of unstyled plain text.
 
 ---
 
@@ -99,43 +140,23 @@ Use this section as a chronological worklog while coding.
 
 | Concept | What it means | Example from my code |
 |---|---|---|
-| [concept] | [definition] | [snippet/location] |
-| [concept] | [definition] | [snippet/location] |
+| Static files | Non-Python assets like CSS, JS, and images | `static/css/style.css` |
+| `STATICFILES_DIRS` | List of local folders Django searches for static assets | `BASE_DIR / 'static/'` in `smartnotes/settings.py` |
+| Template inheritance | One template extends another shared layout | `{% extends "base.html" %}` |
+| Template blocks | Named sections child templates can replace | `{% block content %}` in `base.html` |
+| Bootstrap CDN | External stylesheet link for quick UI styling | Bootstrap link in `base.html` |
 
 ---
 
-## Questions for Model
+## Beginner summary
 
-- [Model, explain why ...]
-- [Model, compare approach A vs B in this context]
-- [Model, what is the best practice for ...]
+This stage was about making the Django app look more like a real website instead of a collection of plain HTML pages.
 
----
+The main progression was:
 
-## References and assets
+1. Tell Django where static files live
+2. Create one shared base template for all pages
+3. Reuse that base template in page-specific templates
+4. Add style with Bootstrap and custom CSS
 
-- Course chapter links: [To fill]
-- Docs used: [To fill]
-- Screenshots used: [To fill]
-
----
-
-## End-of-module summary (fill when class_05 is done)
-
-### What I built
-
-[Short summary of implemented features]
-
-### What I understood well
-
-- [Topic 1]
-- [Topic 2]
-
-### What I still need to review
-
-- [Topic 1]
-- [Topic 2]
-
-### Next step for class_06
-
-[What you plan to focus on next]
+That combination makes future front-end work faster, cleaner, and easier to maintain.

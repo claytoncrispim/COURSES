@@ -1,61 +1,154 @@
 # Django Learning Notes
+## Foundations (early modules)
 
-## Commands We Are Learning
+---
 
-### Migrate command
+## Coverage note
 
-Command: ```
-python manage.py migrate```
+This file captures the early Django modules shown in the course outline: starting your Django project and built-in user management (the part before class_03 notes begin).
+
+---
+
+## Topics covered
+
+1. Creating a new Django project
+2. The Model View Template pattern in Django
+3. Building a minimum working page
+4. Creating your first Django template
+5. Django admin for visualizing and managing data
+6. Migrations: making database changes easy
+7. User authentication in two simple steps
+
+---
+
+## 1. Creating a new Django project
+
+Main command sequence:
+
+```bash
+django-admin startproject smartnotes
+cd smartnotes
+python manage.py runserver
+```
+
+What this establishes:
+- A Django project with core configuration files
+- A working local development server
+- The baseline folder structure for apps, settings, urls, and templates
+
+Why this matters:
+- It creates the foundation used by every later module (models, views, templates, auth, and admin).
+
+---
+
+## 2. The Model View Template pattern in Django
+
+Django uses MVT (Model View Template):
+- Model: data structure and database behavior
+- View: request handling and business logic
+- Template: HTML presentation layer
+
+Learning takeaway:
+- Keeping responsibilities separate makes the project easier to grow and debug.
+
+---
+
+## 3. Building a minimum working page
+
+Early in the course, the goal is to return a working response from a route before adding complexity.
+
+Typical flow:
+- Create a simple view
+- Map URL to that view
+- Confirm route works in browser
+
+Why this matters:
+- It validates URL routing and response cycle before introducing template inheritance and dynamic data.
+
+---
+
+## 4. Creating your first Django template
+
+After confirming a basic route works, the next step is rendering HTML through Django templates.
+
+Key steps:
+- Create template file under the app templates folder
+- Render it from a view
+- Keep presentation logic in template, not in Python view code
+
+Why this matters:
+- This is the first step toward reusable front-end patterns that later evolve into base templates and includes.
+
+---
+
+## 5. Django admin for visualizing and managing data
+
+The admin panel gives a quick way to manage project data through UI.
+
+Main points:
+- Create a superuser account
+- Access `/admin/`
+- Register models in admin to create/read/update/delete data visually
+
+Command used:
+
+```bash
+python manage.py createsuperuser
+```
+
+---
+
+## 6. Migrations: making database changes easy
+
+Core migration command:
+
+Command:
+
+```bash
+python manage.py migrate
+```
 
 What it does:
-Applies pending migrations to the database and creates/updates tables to match installed apps.
+- Applies pending migrations to the database
+- Creates or updates tables to match installed apps
 
 When to run it:
 - Right after creating a new Django project
-- After pulling changes that include new migrations
-- After installing apps that ship with migrations
+- After pulling changes that include migrations
+- After installing apps that ship migrations
 
 ---
 
-### Create superuser command
+## 7. User authentication in two simple steps
 
-Command: ```
-python manage.py createsuperuser```
+Two-step pattern introduced in this phase:
+1. Protect a view using authentication checks
+2. Redirect unauthenticated users to login
 
-What it does:
-Creates an admin user account with full access to the Django admin panel at `/admin/`.
-Prompts for a username, email, and password interactively.
+Example implementation uses `login_required` with `login_url='/admin'`.
 
-When to run it:
-- Once after running `migrate` on a new project
-- When you need a new admin account to access the Django admin interface
+### Password validation behavior during superuser creation
 
-#### ⚠️ Password validation — never bypass in production
+During `createsuperuser`, Django runs built-in password validators before accepting a password.
 
-During `createsuperuser`, Django runs a set of built-in password validators before accepting the password.
-You can bypass them by typing `y` when prompted with *"This password … bypass password validation and create the user anyway?"*.
+Bypassing validation is possible in development, but should never be done in production.
 
-**Only do this locally for development convenience. Never bypass validation in production.**
-
-Django's built-in password validators (`AUTH_PASSWORD_VALIDATORS` in `settings.py`) and why they matter:
+Built-in validators configured under `AUTH_PASSWORD_VALIDATORS` in `smartnotes/settings.py`:
 
 | Validator | What it checks | Why it matters |
 |---|---|---|
-| `UserAttributeSimilarityValidator` | Password is not too similar to the username, email, or other user fields | Prevents trivially guessable passwords tied to account info |
-| `MinimumLengthValidator` | Password meets a minimum character length (default: 8) | Short passwords are brute-forced very quickly |
-| `CommonPasswordValidator` | Password is not in a list of ~20,000 commonly used passwords | Blocks the most targeted passwords in credential-stuffing attacks |
-| `NumericPasswordValidator` | Password is not entirely numeric | Pure numeric passwords (e.g. `12345678`) are weak regardless of length |
-
-These validators are configured in `smartnotes/settings.py` under `AUTH_PASSWORD_VALIDATORS` and can be customised or extended with third-party validators for stricter rules in production.
+| `UserAttributeSimilarityValidator` | Password is not too similar to username/email | Reduces easily guessed account-specific passwords |
+| `MinimumLengthValidator` | Password meets minimum length (default 8) | Short passwords are brute-force friendly |
+| `CommonPasswordValidator` | Password is not in common-password list | Blocks high-frequency credential-stuffing targets |
+| `NumericPasswordValidator` | Password is not fully numeric | Prevents weak numeric-only credentials |
 
 ---
 
-## Restricting access with login_required
+### Restricting access with login_required
 
-Goal:
-Create a new endpoint that renders `authorized.html` and is accessible only to authenticated users.
+Goal: render `authorized.html` only for authenticated users.
 
-### 1. Create the protected view
+### View
 
 In `home/views.py`:
 
@@ -66,14 +159,10 @@ from django.shortcuts import render
 
 @login_required(login_url='/admin')
 def authorized(request):
-	return render(request, 'home/authorized.html')
+    return render(request, 'home/authorized.html')
 ```
 
-Why:
-- `@login_required` checks if the user is authenticated.
-- If not authenticated, Django redirects to the login page.
-
-### 2. Add the endpoint URL
+### URL
 
 In `home/urls.py`:
 
@@ -82,32 +171,32 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-	path('authorized/', views.authorized, name='authorized'),
+    path('authorized/', views.authorized, name='authorized'),
 ]
 ```
 
-### 3. Create the template
+### Template
 
-Create `home/templates/home/authorized.html`:
+In `home/templates/home/authorized.html`:
 
 ```html
 <h1>Authorized Area</h1>
 <p>If you can see this, you are logged in.</p>
 ```
 
-### 4. Configure redirect in the decorator (class approach)
+### Behavior summary
 
-Use the decorator argument directly in `home/views.py`:
+- Authenticated users can access `/authorized/`
+- Anonymous users are redirected to `/admin`
 
-```python
-@login_required(login_url='/admin')
-```
+---
 
-Behavior:
-- Logged-in users can access `/authorized/`.
-- Anonymous users are redirected to `/admin` to log in before accessing `/authorized/`.
+## 8. Summary of what this file demonstrates
 
-Why this is useful:
-- Fast, readable access control for function-based views.
-- Great default for simple protected pages while learning Django.
+- Starting a Django project and validating local server setup
+- Understanding Django's MVT architecture at a practical level
+- Moving from minimal route responses to template rendering
+- Using Django admin and superuser setup for quick data management
+- Running migrations to keep schema in sync with model changes
+- Applying `login_required` for simple protected endpoints
 

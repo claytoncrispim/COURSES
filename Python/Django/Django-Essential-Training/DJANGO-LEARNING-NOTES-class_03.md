@@ -1,5 +1,14 @@
-# Django Learning Notes — class_03
+# Django Learning Notes - class_03
 ## How Django Interacts with Databases
+
+---
+
+## Module 03 chapters covered
+
+1. Introduction to ORMs
+2. Creating your first model
+3. Using admin for data creation and manipulation
+4. Using Django shell for creating and querying data
 
 ---
 
@@ -156,3 +165,13 @@ Result: notes that mention Django in the body but whose title does not mention D
 
 > Chaining `.filter()` and `.exclude()` returns a QuerySet — a lazy list of matching records.
 > The actual database query only runs when you access or print the results.
+
+---
+
+## 5. Summary of what this branch demonstrates
+
+- Translating database concepts into Python model classes with Django ORM.
+- Defining and migrating a first model into real database tables.
+- Registering models in Django admin for CRUD operations without custom views.
+- Using Django shell for rapid data creation, filtering, and query experimentation.
+- Building intuition for field lookups and lazy QuerySet evaluation.

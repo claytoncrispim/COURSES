@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 
+import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -124,3 +126,13 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static/',
 ]
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# For GitHub Codespaces, to avoid the error "Error: Could not find a version that satisfies the requirement django (from versions: none) ERROR: No matching distribution found for django"
+IS_CODESPACES = os.environ.get('CODESPACES') == 'true'
+if IS_CODESPACES:
+    CRSF_TRUSTED_ORIGINS = ['https://localhost:8000']

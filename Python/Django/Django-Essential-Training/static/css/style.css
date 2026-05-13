@@ -1,13 +1,17 @@
-.note-li{
+/* .note-li{
     color: red;
-}
+} */
 
 /* My customised styles - not from the course */
 
-.note-detail{
+/* .note-detail{
     color: #3601a7
 }
 
 .note-popular{
     color: #fd0083
+} */
+
+ul.errorlist{
+    display: none;
 }

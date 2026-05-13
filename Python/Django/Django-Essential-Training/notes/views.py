@@ -1,8 +1,15 @@
 from django.shortcuts import render
 from django.http import Http404
-from django.views.generic import DetailView, ListView
+from django.views.generic import CreateView, DetailView, ListView
 
 from .models import Notes
+from .forms import NotesForm
+
+class NotesCreateView(CreateView):
+    model = Notes
+    # fields = ['title', 'text'] # replaced by "form_class = NotesForm" bellow
+    success_url = '/smart/notes'
+    form_class = NotesForm
 
 
 class NotesListView(ListView):

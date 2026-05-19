@@ -2,7 +2,15 @@
 
 {% block content %}
     <div class="border rounded p-3">
-        <h1 class="my-5">{{note.title}}</h1>        
+        {% if note.is_public %}
+            <p class="text-muted">This note is <span class="badge bg-success">Public</span>. Be careful when sharing sensitive information</p>
+        {% else %}
+            
+            <p class="text-muted">This note is <span class="badge bg-secondary">Private</span>. Only you can see it.</p>
+        {% endif %}
+        <h1 class="my-5">{{note.title}}</h1>    
+        <!-- Instructor's approach for this part of Challenge Class 08:
+        <h1 class="my-5">{{note.title}}{% if note.is_public %}<span class="badge bg-secondary">Public</span>{% endif %}</h1> -->
         <p>{{note.text}}</p>
         <p># of Likes:</p>
         <p>{{note.likes}}</p>
@@ -10,11 +18,39 @@
 
     <form method="POST" action="{% url 'notes.add_like' pk=note.id %}" style="display:inline;">
         {% csrf_token %}
+        {{ form.as_p }}
         <button type="submit" class="btn btn-primary my-5">Like</button>
     </form>
 
+    <form method="POST" action="{% url 'notes.mark_public' pk=note.id %}" style="display:inline;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success my-5">Mark as Public</button>
+    </form>
+
+    <form method="POST" action="{% url 'notes.mark_private' pk=note.id %}" style="display:inline;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-secondary my-5">Mark as Private</button>
+    </form>
    
-    <a href="{% url 'notes.list' %}" class="btn btn-secondary my-5">Back</a>
-    <a href="{% url 'notes.update' pk=note.id %}" class="btn btn-secondary">Edit</a>
+    <a href="{% url 'notes.list' %}" class="btn btn-light my-5">Back</a>
+    <a href="{% url 'notes.update' pk=note.id %}" class="btn btn-warning">Edit</a>
     <a href="{% url 'notes.delete' pk=note.id %}" class="btn btn-danger">Delete</a>
 {% endblock %}
+
+
+<!-- Instructor's approach for this part of Challenge Class 08 -->
+ <!-- 
+{% csrf_token %}
+{{ form.as_p }}
+
+ <button type="submit" class="btn btn-secondary my-5">
+    {% if note.is_public %}
+        Make it Private
+    {% else %}
+        Make it Public
+    {% endif %}
+ </button>
+ 
+-->

@@ -6,11 +6,16 @@
     <div class="row row-cols-3 g-2">
         {% for note in notes %}
         <div class="col">
-            <div class="p-3 border rounded">                
+            <div class="p-3 border rounded">                 
                 <a href="{% url 'notes.detail' pk=note.id %}" class="text-blue text-decoration-none">
                     <h3>{{ note.title }}</h3>
                 </a>
                 {{ note.text|truncatechars:10 }}
+                {% if note.is_public %}
+                    <span class="badge bg-success">Public</span>
+                {% else %}
+                    <span class="badge bg-secondary">Private</span>
+                {% endif %}
             </div>
         </div>
         {% endfor %}

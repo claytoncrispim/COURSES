@@ -5,11 +5,16 @@
     <div class="row row-cols-3 g-2">
         {% for note in notes %}
         <div class="col">
-            <div class="p-3 border rounded bg-primary text-white text-center h-100">                
-                <a href="{% url 'notes.detail' pk=note.id %}" class="text-white text-decoration-none">
+            <div class="p-3 border rounded bg-light text-dark text-center h-100">                
+                <a href="{% url 'notes.detail' pk=note.id %}" class="text-dark text-decoration-none">
                     <h3>{{ note.title |truncatechars:10 }}</h3>
                 </a>
-                <p># of Likes: {{ note.likes }}</p>
+                <p>Likes: {{ note.likes }}</p>
+                {% if note.is_public %}
+                    <span class="badge bg-success">Public</span>
+                {% else %}
+                    <span class="badge bg-secondary">Private</span>
+                {% endif %}
             </div>
         </div>
         {% endfor %}

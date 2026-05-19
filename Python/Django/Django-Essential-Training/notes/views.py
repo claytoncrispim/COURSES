@@ -1,6 +1,8 @@
-from django.shortcuts import render
-from django.http import Http404
-from django.views.generic import CreateView, DetailView, ListView
+from django.shortcuts import get_object_or_404
+from django.http import Http404, HttpResponseRedirect
+from django.urls import reverse
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.views.generic.edit import DeleteView
 
 from .models import Notes
 from .forms import NotesForm
@@ -8,6 +10,11 @@ from .forms import NotesForm
 class NotesCreateView(CreateView):
     model = Notes
     # fields = ['title', 'text'] # replaced by "form_class = NotesForm" bellow
+    success_url = '/smart/notes'
+    form_class = NotesForm
+
+class NotesUpdateView(UpdateView):
+    model = Notes    
     success_url = '/smart/notes'
     form_class = NotesForm
 
@@ -45,37 +52,18 @@ class PopularNotesListView(ListView):
     queryset = Notes.objects.filter(likes__gte=1)
 
 
-# Model, remove these two commented out function based views (list, detail) when creating the DJANGO-LEARNING-NOTES-class_04.md. You can keep the learning notes at the bottom, as referece for the learning notes:
-# def list(request):
-#     all_notes = Notes.objects.all()
-#     return render(request, 'notes/notes_list.html', {'notes': all_notes})
+# Final CRUD methods: Delete
+class NotesDeleteView(DeleteView):
+    model = Notes
+    success_url = '/smart/notes'
+    template_name = 'notes/notes_delete.html'
 
 
-# def detail(request, pk):
-#     try:
-#         note = Notes.objects.get(pk=pk)
-#     except Notes.DoesNotExist:
-#         raise Http404("Note doesn't exist")
-    
-#     return render(request, 'notes/notes_detail.html', {'note': note})
-
-
-
-
-# ---- For learning notes: ----
-# 
-# Django's generic CBVs (ListView, DetailView) automatically derive the template
-# name using the convention: <app_label>/<model_name_lowercase>_<suffix>.html
-# e.g. Notes + ListView → notes/notes_list.html, Notes + DetailView → notes/notes_detail.html
-# So the explicit `template_name` attribute on NotesListView is redundant — both views work
-# without it, as long as the template files match the naming convention.
-
-# However, for the challenge 04, I had to explicitly declare and assign the template_name = "notes/notes_popular.html". The page won't load that template without it, otherwise, it falls back to template_name = "notes/notes_list.html" instead.
-
-# Regarding my approach, I found this question at Stack Overflow that helped me to understand what I had to do (https://stackoverflow.com/questions/19707237/use-get-queryset-method-or-set-queryset-variable). It worked (screenshot at screenshots/Screenshot from 2026-05-06 17-14-29.png) - Model attach this screenshot to the learning notes in the correlated section. 
-# 
-# According to that forum, queryset, the approach I used, is created once when the server starts.
-# However, the get_queryset() method is called for every request
-# I will try use the get_queryset() method as my second approach, and then compare with the instructor's after I finish this challenge.
-
-# ---- End of learning notes ----
+# Challenge - Class 07: Instructor's approach (Function-based view)
+def add_like_view(request, pk):
+    if request.method == 'POST':
+        note = get_object_or_404(Notes, pk=pk)
+        note.likes += 1
+        note.save()
+        return HttpResponseRedirect(reverse('notes.detail', args=(pk,)))
+    raise Http404("Only POST requests are allowed for this view.")

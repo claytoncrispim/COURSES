@@ -2,16 +2,21 @@
 
 {% block content %}
 
-    <form action="{% url 'notes.new' %}" method="POST">{% csrf_token %}
+    <form method="POST">{% csrf_token %}
         {{ form}}
-        <button type="submit" class="btn btn-primary my-5">Submit</button>
+                <!-- <button type="submit" class="btn btn-primary my-5" {% if form.likes %}hidden="True"{% endif %}>Submit</button> -->
+            <button type="submit" class="btn btn-primary my-5">Submit</button>
+            <!-- {% if form.likes %}
+                <button type="submit" class="btn btn-primary my-5">Like</button>
+            {% endif %} -->
+              <a href="{% url 'notes.list' %}" class="btn btn-secondary" cancel>Cancel</a>
     </form>
     {% if form.errors %}
-        <div class="alert alert-danger my-5">
-            {{form.errors.title.as_text}}
-        </div>
-    {% endif %}        
-
+    <div class="alert alert-danger my-5">
+        {{form.errors.title.as_text}}
+    </div>
+    {% endif %}
+  
 
 {% endblock %}
 
@@ -19,4 +24,12 @@
 {% csrf_token %} means Cross-Site Request Forgery 
 
 The instructor didn't mention in the video, but I had to uncomment the line in "base.html" that links to the "style.css" file, otherwise the form errors were not showing up in red. I also added some custom styles to hide the error list bullet points and to make the error text red as per guidance from the instructor.
+-->
+
+<!-- Learning note reminder (Class 06/07):
+For this shared form template, leaving out the "action" attribute is correct.
+The browser posts back to the same URL:
+- /smart/notes/new -> handled by CreateView (creates a note)
+- /smart/notes/<pk>/edit -> handled by UpdateView (updates the same note)
+This avoids accidentally hardcoding the create route while editing.
 -->

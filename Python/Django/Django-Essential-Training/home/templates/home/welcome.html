@@ -13,28 +13,9 @@
 </div>
 {% endblock %}
 
-<!-- For DJANGO-LEARNING-CHALLENGE-class_05.md document: Dividing a Template into Smaller Parts
- 
-My solution for the challenge:
 
-I used `{% include "advantages.html" %}` to include the content of "advantages.html" into "welcome.html". This allows me to keep my templates modular and reusable. The "advantages.html" file contains a simple list of advantages of the app, and by including it in "welcome.html", I can easily maintain and update that content without having to modify the main welcome page. This approach promotes better organization and separation of concerns in my templates.
+<!-- For learning notes: -->
+<!-- It seems Django is really sensitive with Built-in template tags and filters, and it doesn't allow any commented out code inside templates. -->
+<!-- I had to remove the commented out code because it was causing a TemplateSyntaxError. -->
 
-I also had to update settings to ensure that Django knows where to find my templates. I added 'home/templates/home' to the `DIRS` list in the TEMPLATES setting in `settings.py`. This way, when I use `{% include "advantages.html" %}`, Django can locate the "advantages.html" file correctly.
-
-
-Snippet of "welcome.html" by the instructor as solution for the challenge:
-```html
-{% extends "base.html" %}
-
-{% block content %}
-    <h1>Welcome to SmartNotes!</h1>
-    <p>Today is {{ today }}</p>
-    <a href="{% url 'notes.list' %}" class="btn btn-primary">Check out these smartnotes!</a>
-
-    <h2 class="my-5">Some advantages of our app:</h2>
-    {% include "home/advantages.html" %}
-{% endblock %}
-
-She also used include, but she used `{% include "home/advantages.html" %}` instead of just `{% include "advantages.html" %}`. This is because the "advantages.html" file is located in the "home/templates/home" directory, so we need to specify the correct path to include it. By using `{% include "home/advantages.html" %}`, we ensure that Django can find and include the correct template file.
-
--->
+ <!-- Model: add this information and any extended explanation you may judge relevant to the learning notes of class 09 -->

@@ -9,9 +9,37 @@
     </head>
 
     <body>
+
+        {% if user.is_authenticated %}       
+        <header>
+            <div class="d-flex justify-content-end align-items-center">
+                <div class="p-2">Welcome, {{ user.username }}</div>
+                
+                <!-- Source - https://stackoverflow.com/a/77928839
+                Posted by Mohammad Golam Dostogir
+                Retrieved 2026-05-20, License - CC BY-SA 4.0 -->
+
+                <form action="{% url 'logout' %}" method="post" class="p-2">
+                    {% csrf_token %} <!-- csrf_token is very important to have as this is POST request -->
+                    <button type="submit" class="btn btn-primary my-5">Logout</button>
+                </form>
+            </div>
+            
+
+
+
+        </header>
+
+        {% endif %}
         <div class="my-5 text-center container">
             {% block content %}
             {% endblock %}
         </div>        
     </body>
 </html>
+
+<!-- IMPORTANT INFORMATION FOR LEARNING NOTES:
+
+Unlike the instructor's instructions in the course, Django doesn't accept GET request for logout. So I had to change the base.html  template to use a form that submits a POST request to the logout URL. I also added the {% csrf_token %} for security reasons, as Django requires it for POST requests. This way, when the user clicks the logout button, it will properly log them out and redirect them to the login page as specified in the settings.py file.
+ 
+-->

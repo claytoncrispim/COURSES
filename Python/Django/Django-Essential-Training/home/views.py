@@ -4,6 +4,18 @@ from datetime import datetime
 # from django.contrib.auth.decorators import login_required # (replaced for LoginRequiredixin)
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView, LogoutView
+
+class LoginInterfaceView(LoginView):
+    template_name = 'home/login.html'
+
+class LogoutInterfaceView(LogoutView):
+    template_name = 'home/logout.html'    
+
+
+class FarewellView(TemplateView):
+    template_name = 'home/farewell.html'
+
 
 # Class based views: HomeView and AuthorizedView
 class HomeView(TemplateView):

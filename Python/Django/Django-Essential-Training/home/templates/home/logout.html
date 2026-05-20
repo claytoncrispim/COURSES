@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-3 border rounded text-center">
+    <h2>You are already logged out</h2>
+    <p>The active logout flow is handled from the header logout button.</p>
+    <a href="{% url 'home' %}" class="btn btn-secondary">Back to welcome</a>
+</div>
+
+{% endblock %}

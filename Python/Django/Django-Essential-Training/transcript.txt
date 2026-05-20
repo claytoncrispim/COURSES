@@ -1,0 +1,26 @@
+Class 09 Transcript Notes
+
+1. Adding login and logout pages
+
+- [Instructor] We are almost there. The last thing remaining for our app is to create a proper login place. Although the admin login is nice, it can only be accessed by staff members of the system. So we need to create the authentication interface as well. Let's do this. So first let's go to home, then views, and then let's import here from django.contrib.auth.views, import loginview. And then let's create a class called logininterfaceview that inherits from login view. And in here, we only need to define really one thing, the template name. So let's go call it home/login.html. Okay, so we can forget about the URLs. So let's do this now. So in here, let's add a login page that inherits from views, login interface view as view. Okay, so now we can create a template. So in here, let's add the new login.html. And in here, really all we need to do is extends base.html to get all our configuration, to then block content, and finally, endblock. Okay, so in here, what we need is simply a form. This form should have method equals to post. Because this is a form with the method posts, we can't forget what our dear friend csrf_token. And then we're going to use form as P because it's going to be rendered as P tags in the HTML. That's the only difference. And finally, we're going to have an input. The type's going to be submit. Let's add some class here. So BTN and BTN secondary. And that's it. Okay, let's try this out. So we're going to go here, go to login. Okay, let's try to log in. Okay, so what's happened here? The problem is that Django has a default system, defined configuration for the redirect, which leads to a page we don't have, which is this account profile page. Because this is a global definition, we should change this not in the class-based views, but we should change it on the settings. So let's do this. Let's go back, then let's go to smartnotes, settings, and then we can add this way below here and we can add login redirect url, is going to be smart/notes. So this is where we're going to redirect the user after it is logged in. So let's try this again. I just remember we are completely logged in here. So first, let's log out to make sure our login work. So log in, then let's add our credentials and it works. Amazing. Okay, so similarly, we also want a logout view, right? We don't want to have to go to the admin to do this. So let's add this real quick. So on the views, again, from here we're going to also import logout view. And similarly, we're going to create a logout interface view that inherits from logout view. And the only thing we need is the template name. Yes. So let's add here, home/logout.html. Okay, so let's create the template. Logout.html. For sake of time, we can copy this and paste it here. And instead of having a form, we're going to have an H1 that says, hope to see you soon. Okay. Oh yes, and we're missing the URLs. So let's do this. We are copying logout and logout. And for the sake of organization, let's add names to this URLs, shall we? So this is going to be our homepage. We can actually get rid of this:
+
+"path('authorized/', views.AuthorizedView.as_view(), name='authorized'), # replaced views.authorized for views.AuthorizedView class that uses the 'as_view' method"
+
+Our system doesn't really need this. Then we have login and finally logout. Okay, one more tidy up to do. Let's make this empty. Okay, let's see what that causes. If we go back, the empty here means that now this welcome page is going to be the default page without any path. And then if you go to logout and try to access the smart notes again, there you go, because we're logged out, now we can't access the notes and it redirects to the Django login. We need to change that as well, but I'm going to leave this to you.
+
+2. Adding a signup page
+
+- Pending transcript.
+
+3. Finishing touches
+
+- Pending transcript.
+
+4. Code challenge: Create a share link for a public note
+
+- Pending transcript.
+
+5. Solution: Create a share link for a public note
+
+- Pending transcript.
+

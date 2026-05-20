@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="p-3 border rounded">
+    <h2>You have been logged out</h2>
+    <p>Hope to see you soon.</p>
+    <p>Redirecting to the welcome page in 3 seconds...</p>
+    <a href="{% url 'home' %}" class="btn btn-secondary">Go to welcome now</a>
+</div>
+
+<meta http-equiv="refresh" content="3;url={% url 'home' %}">
+{% endblock %}

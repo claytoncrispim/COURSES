@@ -39,7 +39,31 @@ This module continues the user-specific workflow and introduces authentication U
 
 ### 2. Adding a signup page
 
-Pending notes.
+#### What the transcript covers
+- Add a dark navbar in the shared base template.
+- Show Login when user is anonymous, and Home + Logout when user is authenticated.
+- Clarify version-specific logout behavior:
+	- Django 4.x and below: logout can be link-based (GET).
+	- Django 5.0+: logout must be POST.
+- For Django 5.0+, wrap logout in a POST form with CSRF token.
+
+#### What was implemented in this project
+- A navbar was added in the active base template with conditional rendering based on `user.is_authenticated`.
+- Anonymous users see a Login button.
+- Authenticated users see Home and Logout controls.
+- Logout is implemented as POST form + CSRF (compatible with Django 5+/6.x).
+- The project keeps a reference template (`base_template_rf.html`) and an active template (`base.html`) to preserve learning history while using the secure workflow.
+
+#### Troubleshooting and differences from the transcript
+- Your comments in both base templates correctly capture the core issue: GET logout from older examples fails on newer Django with 405.
+- The practical fix is exactly what you implemented: use a form that POSTs to `/logout/` with CSRF.
+- In your current workflow, logout then redirects to `/farewell/` (`LOGOUT_REDIRECT_URL`), not directly to login.
+- This means the old expectation of visiting `/logout/` as a page is no longer valid in the main flow.
+
+#### Extra notes to keep
+- Keep `base.html` as the active template for production flow and `base_template_rf.html` as historical/reference material.
+- Keep logout as POST-only in navbar controls.
+- Keep Home/Login/Logout visibility tied to authentication state for cleaner UX.
 
 ### 3. Finishing touches
 
@@ -64,7 +88,7 @@ Pending notes.
 
 ## Suggested Improvements (current chapter)
 
-- Set `LOGOUT_REDIRECT_URL` to `/` (or your preferred landing page), not `/logout`, to avoid confusing loop-like behavior.
+- Keep `LOGOUT_REDIRECT_URL` on a non-logout page (current setup `/farewell/` is correct).
 - Keep the logout button only as a POST form in shared layout.
 - Remove `{{ form.as_p }}` from `logout.html` if that template is kept for reference, since `LogoutView` does not need a user form in this POST-only pattern.
 
@@ -77,5 +101,6 @@ Pending notes.
 - `home/templates/home/login.html`
 - `home/templates/home/logout.html`
 - `static/templates/base.html`
+- `static/templates/base_template_rf.html`
 - `smartnotes/settings.py`
 - `transcript.txt`

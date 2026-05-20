@@ -1,3 +1,7 @@
+<!-- 2nd base template created as instructor's reference
+ and alternative to the original base.html template. This is because the instructor's original base.html template didn't have a logout link that used a GET request, which is not accepted by Django for security reasons. So I had to modify the base.html template to use a form that submits a POST request to the logout URL, and I also added the {% csrf_token %} for security reasons. This way, when the user clicks the logout button, it will properly log them out and redirect them to the login page as specified in the settings.py file. The original base.html template is still available. I can use either of them as needed once they use slightly different approaches. But from now on, I will be using this new base.html template to follow the instructor's approach more closely, while also ensuring that the logout functionality works correctly with Django's requirements.
+-->
+
 {% load static %}
 
 <html>
@@ -9,25 +13,30 @@
     </head>
 
     <body>
+        <nav class="navbar navbar-dark bg-dark">
+            <div class="ms-auto">
+                {% if user.is_authenticated %}
+                <!-- Logout logic Django 4.0 -->
+                <!-- <a href="LOGOUT BUILT-IN TAG, SIMILAR TO LOGIN BELLOW" class="btn btn-outline-light me-1">Logout</a> -->
+                
+                <a href="{% url 'home' %}" class="btn btn-outline-light me-1">Home</a>
+                <!-- Logout logic Django 5.0+ -->
+                <form action="{% url 'logout' %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-light me-1">Logout</button>
+                </form>
+                 {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-light me-1">Login</a>
+                {% endif %}
+
+            </div>
+        </nav>
 
         {% if user.is_authenticated %}       
         <header>
             <div class="d-flex justify-content-end align-items-center">
-                <div class="p-2">Welcome, {{ user.username }}</div>
-                
-                <!-- Source - https://stackoverflow.com/a/77928839
-                Posted by Mohammad Golam Dostogir
-                Retrieved 2026-05-20, License - CC BY-SA 4.0 -->
-
-                <form action="{% url 'logout' %}" method="post" class="p-2">
-                    {% csrf_token %} <!-- csrf_token is very important to have as this is POST request -->
-                    <button type="submit" class="btn btn-primary my-5">Logout</button>
-                </form>
+                <div class="p-2">Welcome, {{ user.username }}!</div> 
             </div>
-            
-
-
-
         </header>
 
         {% endif %}

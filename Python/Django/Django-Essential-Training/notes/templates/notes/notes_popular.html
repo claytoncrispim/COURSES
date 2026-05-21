@@ -15,6 +15,7 @@
                 {% else %}
                     <span class="badge bg-secondary">Private</span>
                 {% endif %}
+                <p>Posted by: {{ note.user.username }}</p>
             </div>
         </div>
         {% endfor %}

@@ -1,5 +1,3 @@
-from unicodedata import name
-
 from django.urls import path
 
 from . import views
@@ -8,6 +6,7 @@ from . import views
 urlpatterns = [
     path('', views.HomeView.as_view(), name='home'), # replaced views.home for views.HomeView class that uses the 'as_view' method . Unlike the instructor's code, I added the forward slash "/" after "home" to avoid 404 error. It seems that without it, the URL pattern doesn't match and results in a 404 error when trying to access http://   
     path('login/', views.LoginInterfaceView.as_view(), name='login'),
+    path('signup/', views.SignupView.as_view(), name='signup'),
     path('logout/', views.LogoutInterfaceView.as_view(), name='logout'),
     path('farewell/', views.FarewellView.as_view(), name='farewell'),
 ]

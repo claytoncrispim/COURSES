@@ -18,8 +18,14 @@
                 {% if user.is_authenticated %}
                 <!-- Logout logic Django 4.0 -->
                 <!-- <a href="LOGOUT BUILT-IN TAG, SIMILAR TO LOGIN BELLOW" class="btn btn-outline-light me-1">Logout</a> -->
-                
+                <div class="d-flex justify-content-end align-items-center">
+                <div class="text-light p-2">Welcome, {{ user.username }}!</div> 
+                </div>
                 <a href="{% url 'home' %}" class="btn btn-outline-light me-1">Home</a>
+                <a href="{% url 'notes.new' %}" class="btn btn-outline-light me-1">Create Note</a>
+                <a href="{% url 'notes.list' %}" class="btn btn-outline-light me-1">Notes List</a>
+                <a href="{% url 'notes.popular' %}" class="btn btn-outline-light me-1">Popular Notes</a>
+
                 <!-- Logout logic Django 5.0+ -->
                 <form action="{% url 'logout' %}" method="post" class="d-inline">
                     {% csrf_token %}
@@ -27,19 +33,12 @@
                 </form>
                  {% else %}
                 <a href="{% url 'login' %}" class="btn btn-outline-light me-1">Login</a>
+                <a href="{% url 'signup' %}" class="btn btn-outline-light me-1">Sign Up</a>
                 {% endif %}
 
             </div>
         </nav>
 
-        {% if user.is_authenticated %}       
-        <header>
-            <div class="d-flex justify-content-end align-items-center">
-                <div class="p-2">Welcome, {{ user.username }}!</div> 
-            </div>
-        </header>
-
-        {% endif %}
         <div class="my-5 text-center container">
             {% block content %}
             {% endblock %}

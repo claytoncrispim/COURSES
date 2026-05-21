@@ -3,8 +3,11 @@ from django.http import HttpResponse
 from datetime import datetime
 # from django.contrib.auth.decorators import login_required # (replaced for LoginRequiredixin)
 from django.views.generic import TemplateView
+from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
 
 class LoginInterfaceView(LoginView):
     template_name = 'home/login.html'
@@ -12,6 +15,16 @@ class LoginInterfaceView(LoginView):
 class LogoutInterfaceView(LogoutView):
     template_name = 'home/logout.html'    
 
+
+# Class based view: SignupView
+class SignupView(FormView):
+    template_name = 'home/signup.html'
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
 
 class FarewellView(TemplateView):
     template_name = 'home/farewell.html'

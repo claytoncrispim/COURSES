@@ -1,5 +1,6 @@
 from typing import Any
 
+from django.db.models import Q
 from django.db.models.query import QuerySet
 from django.forms.models import BaseModelForm
 from django.shortcuts import get_object_or_404
@@ -60,7 +61,11 @@ class NotesPopularListView(LoginRequiredMixin, ListView):
     login_url = '/admin'
     
     def get_queryset(self): # 2nd approach
-        return Notes.objects.filter(likes__gt=0).order_by('-likes') # This will return only the notes that have more than 0 likes, ordered by the number of likes in descending order (most liked first).
+        # Show popular notes while respecting visibility:
+        # users can see their own notes and public notes from others.
+        return Notes.objects.filter(
+            Q(likes__gt=0) & (Q(user=self.request.user) | Q(is_public=True))
+        ).order_by('-likes')
        
 
 # Instructor's approach

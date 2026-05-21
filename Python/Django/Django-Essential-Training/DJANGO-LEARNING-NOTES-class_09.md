@@ -47,12 +47,51 @@ This module continues the user-specific workflow and introduces authentication U
 	- Django 5.0+: logout must be POST.
 - For Django 5.0+, wrap logout in a POST form with CSRF token.
 
+#### Instructor gap noted
+- In the chapter titled "Adding a signup page", the transcript content does not actually show signup page creation.
+- The real signup behavior appears only later (in finishing touches), where the flow assumes signup already exists.
+- This can confuse students because the title and the demonstrated steps do not match.
+
 #### What was implemented in this project
 - A navbar was added in the active base template with conditional rendering based on `user.is_authenticated`.
 - Anonymous users see a Login button.
+- Anonymous users also see a Sign Up button.
 - Authenticated users see Home and Logout controls.
 - Logout is implemented as POST form + CSRF (compatible with Django 5+/6.x).
 - The project keeps a reference template (`base_template_rf.html`) and an active template (`base.html`) to preserve learning history while using the secure workflow.
+- Signup flow was completed manually in the app:
+	- Added `SignupView` using `UserCreationForm`.
+	- Added URL route `signup/` named `signup`.
+	- Added `home/signup.html` template with POST + CSRF + form rendering.
+	- On successful signup, redirect goes to login so the new user can authenticate.
+
+#### Before and after (signup gap fix)
+
+Before (placeholder, no real signup logic):
+
+```python
+class SignupView(TemplateView):
+	template_name = 'home/signup.html'
+```
+
+After (functional signup):
+
+```python
+class SignupView(FormView):
+	template_name = 'home/signup.html'
+	form_class = UserCreationForm
+	success_url = reverse_lazy('login')
+
+	def form_valid(self, form):
+		form.save()
+		return super().form_valid(form)
+```
+
+Route added:
+
+```python
+path('signup/', views.SignupView.as_view(), name='signup')
+```
 
 #### Troubleshooting and differences from the transcript
 - Your comments in both base templates correctly capture the core issue: GET logout from older examples fails on newer Django with 405.
@@ -67,7 +106,70 @@ This module continues the user-specific workflow and introduces authentication U
 
 ### 3. Finishing touches
 
-Pending notes.
+#### What the transcript covers
+- Consolidates navbar behavior with conditional controls.
+- For authenticated users: show Home, Create, and Logout controls.
+- For anonymous users: show Login and Signup.
+- Demonstrates full cycle: signup -> redirect to login -> login -> create note as new user.
+
+#### What was implemented in this project
+- Navbar now supports auth-aware controls in the active base template.
+- Signup route is functional and linked from navbar.
+- New users can register outside Django admin and then create their own notes after login.
+- Logout remains POST-only for Django 5.0+ compatibility.
+
+#### Troubleshooting and differences from the transcript
+- Transcript uses mixed logic across chapters; actual signup implementation steps were missing earlier and had to be completed in this project.
+- Current implementation explicitly fills that gap with a working form/view/URL/template flow.
+
+#### Before and after (logout for Django 5+)
+
+Before (works on older versions, fails on Django 5+):
+
+```html
+<a href="{% url 'logout' %}" class="btn btn-outline-light me-1">Logout</a>
+```
+
+After (compatible with Django 5+/6.x):
+
+```html
+<form action="{% url 'logout' %}" method="post" class="d-inline">
+	{% csrf_token %}
+	<button type="submit" class="btn btn-outline-light me-1">Logout</button>
+</form>
+```
+
+### Extra Refactor (Not in the Course): Popular Notes Privacy
+
+#### Problem observed
+- Popular notes page was listing notes across all users, including private notes from other users.
+
+#### Goal
+- Keep popular ranking, but respect visibility boundaries.
+
+#### Step-by-step refactor
+1. Import `Q` from Django ORM in `notes/views.py`.
+2. Update `NotesPopularListView.get_queryset()` to filter by likes and visibility rules.
+3. Keep ordering by `-likes`.
+
+Before:
+
+```python
+return Notes.objects.filter(likes__gt=0).order_by('-likes')
+```
+
+After:
+
+```python
+return Notes.objects.filter(
+	Q(likes__gt=0) & (Q(user=self.request.user) | Q(is_public=True))
+).order_by('-likes')
+```
+
+#### Result
+- Users still see popular notes.
+- Private notes are only visible to their owner.
+- Public notes from other users can appear safely.
 
 ### 4. Code challenge: Create a share link for a public note
 

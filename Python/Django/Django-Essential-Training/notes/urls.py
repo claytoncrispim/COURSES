@@ -11,5 +11,6 @@ urlpatterns = [
     path('notes/<int:pk>/mark_private', views.mark_private_view, name="notes.mark_private"), # Challenge Class 08: My Implementation
     path('notes/popular', views.NotesPopularListView.as_view(), name="notes.popular"),
     path('notes/new', views.NotesCreateView.as_view(), name="notes.new"),
+    path('notes/<int:pk>/share', views.notes_share_view, name="notes.share"), # Challenge Class 09: My implementation
     path('notes/<int:pk>/delete', views.NotesDeleteView.as_view(), name="notes.delete"),
 ]

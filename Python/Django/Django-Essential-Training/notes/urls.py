@@ -13,4 +13,5 @@ urlpatterns = [
     path('notes/new', views.NotesCreateView.as_view(), name="notes.new"),
     path('notes/<int:pk>/share', views.notes_share_view, name="notes.share"), # Challenge Class 09: My implementation
     path('notes/<int:pk>/delete', views.NotesDeleteView.as_view(), name="notes.delete"),
+    # path('notes/<int:pk>/share', views.NotesPublicDetailView.as_view(), name="notes.share"), # Challenge Class 09: Instructor's approach (Class-based view)
 ]

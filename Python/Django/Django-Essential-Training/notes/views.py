@@ -48,7 +48,13 @@ class NotesDetailView(LoginRequiredMixin, DetailView):
     context_object_name = "note"
     template_name = "notes/notes_detail.html"
     login_url = '/login'
-    
+
+
+# Challenge - class 09: Instructor's approach - Class-based view to share the note with other users. Only public notes can be shared.
+# class NotesPublicDetailView(DetailView):
+#     model = Notes
+#     context_object_name = "note"
+#     queryset = Notes.objects.filter(is_public=True) # Only allow sharing of public notes. If the note is not public, it will raise a 404 error.
 
 # Challenge - Class 04
 # My 1st approach using queryset attribute (commented out)

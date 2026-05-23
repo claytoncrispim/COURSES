@@ -5,6 +5,7 @@
         <div class="border rounded p-3"> 
             <h1 class="my-5">{{note.title}}</h1>   
             <p>{{note.text}}</p>
+            <p class="d-inline-flex mb-3 px-2 py-1 fw-semibold text-success bg-success-subtle border border-success-subtle rounded-2">Posted by: {{note.user}}</p>
         </div>
     {% elif not note.is_public and note.user != request.user %}
         <div class="alert alert-danger my-3">

@@ -2,7 +2,7 @@
 
 ## Module Overview
 
-This module continues the user-specific workflow and introduces authentication UX and public-sharing features. These notes are started with chapter 1 and prepared for incremental updates as the module progresses.
+This module continues the user-specific workflow and introduces authentication UX and public-sharing features. These notes were built incrementally as the module progressed.
 
 ---
 
@@ -71,20 +71,20 @@ Before (placeholder, no real signup logic):
 
 ```python
 class SignupView(TemplateView):
-	template_name = 'home/signup.html'
+    template_name = 'home/signup.html'
 ```
 
 After (functional signup):
 
 ```python
 class SignupView(FormView):
-	template_name = 'home/signup.html'
-	form_class = UserCreationForm
-	success_url = reverse_lazy('login')
+    template_name = 'home/signup.html'
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
 
-	def form_valid(self, form):
-		form.save()
-		return super().form_valid(form)
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
 ```
 
 Route added:
@@ -134,8 +134,8 @@ After (compatible with Django 5+/6.x):
 
 ```html
 <form action="{% url 'logout' %}" method="post" class="d-inline">
-	{% csrf_token %}
-	<button type="submit" class="btn btn-outline-light me-1">Logout</button>
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-light me-1">Logout</button>
 </form>
 ```
 
@@ -173,11 +173,121 @@ return Notes.objects.filter(
 
 ### 4. Code challenge: Create a share link for a public note
 
-Pending notes.
+#### What the transcript covers
+- Create a public note share page that does not require login.
+- Reuse the detail page idea, but make the endpoint public-facing.
+- Restrict access so only public notes can be shared.
+- Return 404 for private notes to avoid leaking existence.
+
+#### What was implemented in this project
+- Added `notes_share_view` as a function-based view.
+- Added route `notes/<int:pk>/share` named `notes.share`.
+- Created `notes/templates/notes/notes_share.html`.
+- Exposed a shareable absolute URL with `request.build_absolute_uri`.
+- Kept the share page mostly read-only and hid owner-only actions when not needed.
+
+#### Before and after (share-link implementation)
+
+Before (simple logged-in detail view only):
+
+```python
+class NotesDetailView(LoginRequiredMixin, DetailView):
+	model = Notes
+	context_object_name = "note"
+	template_name = "notes/notes_detail.html"
+```
+
+After (public share endpoint with visibility checks):
+
+```python
+def notes_share_view(request, pk):
+	note = get_object_or_404(Notes, pk=pk)
+
+	if not note.is_public:
+		# Current implementation renders a protective fallback message.
+		return render(request, 'notes/notes_share.html', {'note': note})
+
+	return render(request, 'notes/notes_share.html', {'note': note})
+```
+
+Route added:
+
+```python
+path('notes/<int:pk>/share', views.notes_share_view, name='notes.share')
+```
+
+#### Extra refactor notes from this project
+- Popular notes were also adjusted so private notes from other users are no longer exposed.
+- That refactor keeps visibility rules consistent across the app: public content can be shared, private content stays protected.
+
+#### Real-world takeaway
+- For small, highly custom permission flows like a share-link endpoint, a function-based view can be easier to read and reason about.
+- For standard CRUD pages such as list/detail/create/update/delete, class-based views stay cleaner and more reusable.
+- In production, the strictest privacy baseline is to query only `is_public=True` for public routes and return 404 for everything else.
 
 ### 5. Solution: Create a share link for a public note
 
-Pending notes.
+#### What the transcript covers
+- Replace the login-required detail endpoint with a public-facing detail/share endpoint.
+- Filter the queryset so only public notes are visible.
+- Keep private notes inaccessible to logged-out users, returning 404 instead of exposing data.
+
+#### What was implemented in this project
+- Implemented a public share route with explicit visibility-aware behavior.
+- Added a share button on the authenticated detail page.
+- Used the current request URL to build a copyable share link.
+- Added a visible message for private notes telling the owner to make the note public first.
+
+#### Before and after (template behavior)
+
+Before (internal detail page only):
+
+```django
+{% if note.user == request.user %}
+    <a href="{% url 'notes.update' pk=note.id %}" class="btn btn-warning">Edit</a>
+    <a href="{% url 'notes.delete' pk=note.id %}" class="btn btn-danger">Delete</a>
+{% endif %}
+```
+
+After (share controls and public note messaging):
+
+```django
+{% if note.user == request.user %}
+    {% if note.is_public %}
+        <a href="{{ request.build_absolute_uri }}" class="btn btn-info">Share</a>
+    {% else %}
+        <div class="alert alert-danger my-3">
+            <span class="text-dark">You must mark this note as public to share it.</span>
+        </div>
+    {% endif %}
+{% endif %}
+```
+
+#### Best practice note
+- In real production code, public share pages should stay read-only, minimize information exposure, and return 404 for unauthorized access.
+- This is generally safer than showing permission-specific details to unknown users.
+
+---
+
+## Conclusion / Next Steps
+
+The final chapter closes the course by suggesting a few directions to continue learning:
+- Unit testing in Django to make the app more reliable.
+- Django REST framework if you want to expose API endpoints.
+- Additional Django and Python courses for broader practice.
+
+### Why this matters in practice
+- Unit tests are the first next step when you want confidence in real-world code changes.
+- DRF is the better choice when you need an API instead of server-rendered pages.
+- Server-rendered views are still a strong fit when you want simple, fast CRUD and form workflows.
+
+### CBV vs FBV guidance from this project
+- Use class-based views for standard pages where Django already gives you a strong generic base.
+- Use function-based views when the behavior is tiny, explicit, or custom permission logic is the whole point.
+- The share-link endpoint is a good example of a case where an FBV can be the clearest option.
+- The notes list/detail/create/update/delete pages remain a strong fit for CBVs.
+
+See the separate [conclusion notes](DJANGO-LEARNING-NOTES-conclusion.md) for a compact end-of-course summary.
 
 ---
 
@@ -206,3 +316,4 @@ Pending notes.
 - `static/templates/base_template_rf.html`
 - `smartnotes/settings.py`
 - `transcript.txt`
+- `DJANGO-LEARNING-NOTES-conclusion.md`

@@ -144,10 +144,66 @@ This mini-quiz is extra practice and not official instructor content.
 
 ---
 
-## Compare Later Section (leave blank for now)
+## Solution Comparison (Completed)
 
-When you finish your implementation and watch the instructor solution, we can complete:
-- Your approach
-- Instructor's approach
-- Side-by-side comparison
-- Final takeaways
+The following section compares your final implementation with the instructor solution.
+
+### Your Approach
+
+- **View:**
+	- Implemented a function-based `notes_share_view`.
+	- Kept the endpoint public while enforcing note visibility checks before rendering.
+	- Returned a share page that exposes a copyable absolute URL.
+
+- **URL:**
+	- Added `notes/<int:pk>/share` with the name `notes.share`.
+
+- **Template:**
+	- Built `notes_share.html` to show a public note, a shareable link, and a privacy warning for private notes.
+	- Used the current request URL to help the owner copy the link.
+	- Added a copy interaction for usability.
+
+- **Privacy behavior:**
+	- Public notes can be opened through the share link.
+	- Private notes are blocked and shown with a protective fallback message.
+
+### Instructor's Approach
+
+- **View:**
+	- Uses a class-based `NotesPublicDetailView`.
+	- Removes `LoginRequiredMixin` so the page is public.
+	- Filters the queryset so only `is_public=True` notes are eligible.
+
+- **URL:**
+	- Adds a share route that maps to the public detail view.
+
+- **Template:**
+	- Reuses the note detail template for the public share flow.
+	- Keeps the implementation simpler and more direct.
+
+### Side-by-Side Comparison
+
+| Aspect | Your Approach | Instructor's Approach |
+|---|---|---|
+| View style | Function-based view | Class-based view |
+| Permission handling | Custom logic in FBV | Queryset filtering in CBV |
+| Share page | Dedicated share template | Reused detail template |
+| Share link UX | Copyable absolute URL and explicit messaging | Simpler public detail rendering |
+| Privacy | Explicit note-level checks and messages | Query-level restriction to public notes |
+
+**Key Differences:**
+- Your version is more explicit and user-guided, which is useful when you want to expose a copyable share URL and explain blocked private-note access.
+- The instructor’s version is more compact and idiomatic for a pure public read-only page.
+
+### Real-World Guidance
+
+- Use a function-based view when the share flow needs custom branching, custom messages, or a very explicit permission rule.
+- Use a class-based view when the page is structurally similar to an existing detail page and the main difference is queryset filtering.
+- For production, the safest baseline rule is: only public notes can be queried in the public endpoint.
+
+### Final Takeaways
+
+- Never expose private notes through a public share link.
+- Returning 404 for private notes is preferable to revealing that the note exists.
+- Reusing a detail template can save time, but a dedicated share template gives you more control over UX.
+- The safest design keeps sharing simple while making private content non-discoverable.

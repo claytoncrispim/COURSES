@@ -39,6 +39,32 @@ What this establishes:
 Why this matters:
 - It creates the foundation used by every later module (models, views, templates, auth, and admin).
 
+### Important distinction: startproject vs startapp
+
+This was a key confusion point and it is very common when starting Django.
+
+Use this to create the full Django project (global config, settings, urls, wsgi/asgi, admin wiring):
+
+    django-admin startproject smartnotes
+
+Use this to create an application inside the project (where core business features usually live):
+
+    python manage.py startapp <app_name>
+
+Example inside this project:
+
+    python manage.py startapp notes
+
+Quick mental model:
+- startproject = whole site skeleton
+- startapp = one feature/module inside that site
+
+Practical next steps after creating an app:
+1. Add the app to INSTALLED_APPS in settings.py
+2. Create models/views/templates for that app
+3. Register models in admin.py if needed
+4. Add app URLs and include them from project urls.py
+
 ---
 
 ## 2. The Model View Template pattern in Django
